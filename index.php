@@ -5,7 +5,7 @@ include_once './utils/header.php';
 <main class="content-padding py-5">
     <section class="headline d-flex flex-wrap justify-content-center gap-5">
         <div class="left">
-            <img src="/skillswap/assets/elements/landing_1.png" alt="">
+            <img src="/assets/elements/landing_1.png" alt="">
         </div>
         <div class="right d-flex flex-column justify-content-center">
             <h1 class="fs-custom-1 fw-bold">Learn. Teach.</h1>

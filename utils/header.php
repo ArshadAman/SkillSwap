@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/skillswap/assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/skillswap/assets/css/custom.css">
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/custom.css">
   <script src="https://kit.fontawesome.com/28da159db2.js" crossorigin="anonymous"></script>
   <title>SkillSwap</title>
 </head>
