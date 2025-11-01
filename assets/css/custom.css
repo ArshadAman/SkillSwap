@@ -1,0 +1,39 @@
+:root{
+    --color-primary: #7352FA;
+    --color-purple: #59479E;
+}
+
+.btn-primary{
+    background-color: var(--color-primary)
+}
+
+.fs-custom-1{
+    font-size: 4rem;
+}
+.color-text{
+    color: #0F0D1C;
+}
+
+.content-padding{
+    padding: 0 15rem;
+}
+
+.border-purple{
+    border-color: var(--color-primary);
+}
+.card-text{
+    color: var(--color-purple)
+}
+
+.round-image-fix{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.btn-hover:hover{
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    transition: 0.5s all;
+}
