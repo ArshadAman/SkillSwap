@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
+use App\Http\Models\User
 
 class UserAction extends Controller
 {
@@ -45,5 +46,13 @@ class UserAction extends Controller
         }else{
             return redirect()->back()->with('error','Skill not found');
         }
+    }
+    public function matchUser(Request $request){
+        $user = $request->user();
+        $skills_wanted = $user->skills()->where('type', 'want')->get();
+        $skills_have = $user->skills()->where('type', 'have')->get();
+
+        // Fetch all the users who have the skills wanted by this user making sure that they also want the skills this user has
+        $eligible_users = User::query()
     }
 }

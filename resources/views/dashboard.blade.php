@@ -16,7 +16,7 @@
             <h2 class="text-xl font-semibold mb-4">Skills I Have</h2>
             <ul class="mb-4">
                 @foreach($skillsHave as $skill)
-                <li class="mb-2">{{ $skill->skill_name }}</li>
+                <li class="mb-2 flex justify-between"><p>{{ $skill->skill_name }}</p> <span class="text-red-600 cursor-pointer deleteModal" data-id="{{ $skill->id }}">Delete</span> </li>
                 @endforeach
             </ul>
             <button id="addSkill" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
@@ -25,7 +25,7 @@
             <h2 class="text-xl font-semibold mb-4">Skills I Want</h2>
             <ul class="mb-4">
                 @foreach($skillsWant as $skill_w)
-                <li class="mb-2">{{ $skill_w->skill_name }}</li>
+                <li class="mb-2 flex justify-between"><p>{{ $skill_w->skill_name }}</p> <span class="text-red-600 cursor-pointer deleteModal" data-id="{{ $skill_w->id }}">Delete</span> </li>
                 @endforeach
             </ul>
             <button id="addSkill2" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
@@ -106,6 +106,22 @@
                         Add Skill
                     </button>
                     <button type="button" id="cancelModal" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition cursor-pointer">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+        <div class="fixed left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] bg-opacity-50 flex items-center justify-center z-50 hidden" id="deleteSkillModal">
+        <div class="bg-red-500 text-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">   
+            <form action="/delete-skill" method="POST">
+                @csrf
+                <input type="hidden" id="deleteSkillId" name="skill_id">
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
+                        Delete Skill
+                    </button>
+                    <button type="button" id="cancelDeleteModal" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition cursor-pointer">
                         Cancel
                     </button>
                 </div>
