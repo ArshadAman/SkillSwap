@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
-use App\Http\Models\User
+use App\Http\Models\User;
 
 class UserAction extends Controller
 {
@@ -53,6 +53,5 @@ class UserAction extends Controller
         $skills_have = $user->skills()->where('type', 'have')->get();
 
         // Fetch all the users who have the skills wanted by this user making sure that they also want the skills this user has
-        $eligible_users = User::query()
     }
 }
