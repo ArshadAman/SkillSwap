@@ -10,7 +10,9 @@ class UserAction extends Controller
     public function index(Request $request){
         if(Auth::check()){
             $user = $request->user();
-            return view("dashboard",compact("user"));
+            $skillsHave = $user->skills()->where('type', 'have')->get();
+            $skillsWant = $user->skills()->where('type', 'want')->get();
+            return view("dashboard",compact("user","skillsHave", "skillsWant"));
         }
         else{
             return view("dashboard");

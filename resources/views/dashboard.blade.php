@@ -15,16 +15,18 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h2 class="text-xl font-semibold mb-4">Skills I Have</h2>
             <ul class="mb-4">
-                <li class="mb-2">[Skill 1]</li>
-                <li class="mb-2">[Skill 2]</li>
+                @foreach($skillsHave as $skill)
+                <li class="mb-2">{{ $skill->skill_name }}</li>
+                @endforeach
             </ul>
             <button id="addSkill" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
             <h2 class="text-xl font-semibold mb-4">Skills I Want</h2>
             <ul class="mb-4">
-                <li class="mb-2">[Skill A]</li>
-                <li class="mb-2">[Skill B]</li>
+                @foreach($skillsWant as $skill_w)
+                <li class="mb-2">{{ $skill_w->skill_name }}</li>
+                @endforeach
             </ul>
             <button id="addSkill2" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
         </div>
