@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Database\Eloquent\Builder;
 use Auth;
 use Illuminate\Http\Request;
-use App\Http\Models\User;
+use App\Models\User;
 
 class UserAction extends Controller
 {
@@ -13,7 +13,13 @@ class UserAction extends Controller
             $user = $request->user();
             $skillsHave = $user->skills()->where('type', 'have')->get();
             $skillsWant = $user->skills()->where('type', 'want')->get();
-            return view("dashboard",compact("user","skillsHave", "skillsWant"));
+            $matchedUsers = User::where('id', '!=', $user->id)
+        ->whereHas('skills', function(Builder $query) use ($skillsWant) {
+            $query->whereIn('skill_name', $skillsWant->pluck('skill_name'))->where('type', 'have');
+        })->whereHas('skills', function(Builder $query) use ($skillsHave) {
+            $query->whereIn('skill_name', $skillsHave->pluck('skill_name'))->where('type', 'want');
+        })->get();
+            return view("dashboard",compact("user","skillsHave", "skillsWant", "matchedUsers"));
         }
         else{
             return view("dashboard");
@@ -46,12 +52,5 @@ class UserAction extends Controller
         }else{
             return redirect()->back()->with('error','Skill not found');
         }
-    }
-    public function matchUser(Request $request){
-        $user = $request->user();
-        $skills_wanted = $user->skills()->where('type', 'want')->get();
-        $skills_have = $user->skills()->where('type', 'have')->get();
-
-        // Fetch all the users who have the skills wanted by this user making sure that they also want the skills this user has
     }
 }
