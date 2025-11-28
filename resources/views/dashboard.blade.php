@@ -1,171 +1,329 @@
 @extends('base')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-bold mb-8">Welcome, {{ $user->name ?? '-' }}</h1>
-
-    <div class="grid md:grid-cols-3 gap-8 mb-10">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">My Profile</h2>
-            <p>Name: {{ $user->name ?? '-' }}</p>
-            <p>Email: {{ $user->email ?? '-' }}</p>
-            <p>Contact: {{ $user->contact_info ?? '-' }}</p>
-            <a href="#" class="text-indigo-600 hover:underline text-sm mt-2 inline-block">Edit Profile</a>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">Skills I Have</h2>
-            <ul class="mb-4">
-                @foreach($skillsHave as $skill)
-                <li class="mb-2 flex justify-between"><p>{{ $skill->skill_name }}</p> <span class="text-red-600 cursor-pointer deleteModal" data-id="{{ $skill->id }}">Delete</span> </li>
-                @endforeach
-            </ul>
-            <button id="addSkill" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">Skills I Want</h2>
-            <ul class="mb-4">
-                @foreach($skillsWant as $skill_w)
-                <li class="mb-2 flex justify-between"><p>{{ $skill_w->skill_name }}</p> <span class="text-red-600 cursor-pointer deleteModal" data-id="{{ $skill_w->id }}">Delete</span> </li>
-                @endforeach
-            </ul>
-            <button id="addSkill2" class="text-indigo-600 hover:underline text-sm cursor-pointer">Add Skill</button>
-        </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-8 mb-10">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">Requests I Sent</h2>
-            <ul>
-                <li class="mb-2">[Request to User X] - [Status]</li>
-                <li class="mb-2">[Request to User Y] - [Status]</li>
-            </ul>
-            <a href="#" class="text-indigo-600 hover:underline text-sm">View All Sent Requests</a>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">Requests I Received</h2>
-            <ul>
-                <li class="mb-2">[Request from User A] - [Pending/Accepted/Rejected]</li>
-                <li class="mb-2">[Request from User B] - [Pending/Accepted/Rejected]</li>
-            </ul>
-            <a href="#" class="text-indigo-600 hover:underline text-sm">View All Received Requests</a>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-lg shadow p-6 mb-10">
-        <h2 class="text-xl font-semibold mb-4">Find New Matches</h2>
-        <div class="space-y-4">
-            @if(isset($matchedUsers) && $matchedUsers->count() > 0)
-                @foreach($matchedUsers as $matchedUser)
-                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 class="font-semibold text-lg">{{ $matchedUser->name }}</h3>
-                            </div>
-                            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition text-sm">
-                                Send Request
-                            </button>
-                        </div>
-                        
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="font-medium text-green-700 mb-2">They Have (You Want):</h4>
-                                <ul class="text-sm">
-                                    @foreach($matchedUser->skills->where('type', 'have') as $skill)
-                                        @if(in_array($skill->skill_name, $skillsWant->pluck('skill_name')->toArray()))
-                                            <li class="bg-green-100 text-green-800 px-2 py-1 rounded mb-1 inline-block mr-1">
-                                                {{ $skill->skill_name }}
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <h4 class="font-medium text-blue-700 mb-2">They Want (You Have):</h4>
-                                <ul class="text-sm">
-                                    @foreach($matchedUser->skills->where('type', 'want') as $skill)
-                                        @if(in_array($skill->skill_name, $skillsHave->pluck('skill_name')->toArray()))
-                                            <li class="bg-blue-100 text-blue-800 px-2 py-1 rounded mb-1 inline-block mr-1">
-                                                {{ $skill->skill_name }}
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="text-center py-8">
-                    <div class="text-gray-400 mb-4">
-                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <p class="text-gray-500 mb-2">No matches found yet</p>
-                    <p class="text-sm text-gray-400">Add more skills to find potential matches!</p>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <div class="fixed left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] bg-opacity-50 flex items-center justify-center z-50 hidden" id="skillModal">
-        <div class="bg-blue-500 text-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold">Add New Skill</h3>
-                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
-                </button>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        <header class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Welcome, {{ $user->name ?? '-' }}</h1>
+                <p class="text-sm text-gray-500 mt-1">Manage your skills and find good matches</p>
             </div>
-            
-            <form action="/add-skill" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <label for="skill_name" class="block text-sm font-medium text-white mb-2">Skill Name</label>
-                    <input type="text" id="skill_name" name="skill_name" required 
-                           class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                           placeholder="e.g., Guitar, Cooking, Python">
-                </div>
-                
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-white mb-2">Type</label>
-                    <div class="flex gap-4">
-                        <label class="flex items-center">
-                            <input type="radio" name="type" value="have" checked class="mr-2">
-                            <span>I Have This</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="type" value="want" class="mr-2">
-                            <span>I Want This</span>
-                        </label>
+            <div class="hidden md:flex items-center gap-4 text-sm">
+                <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700">Have: {{ $skillsHave->count() }}</span>
+                <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Want: {{ $skillsWant->count() }}</span>
+            </div>
+        </header>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
+                <dl class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Name</dt>
+                        <dd class="text-gray-900">{{ $user->name ?? '-' }}</dd>
                     </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Email</dt>
+                        <dd class="text-gray-900">{{ $user->email ?? '-' }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Contact</dt>
+                        <dd class="text-gray-900">{{ $user->contact_info ?? '-' }}</dd>
+                    </div>
+                </dl>
+                <button class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm">Edit Profile</button>
+            </section>
+
+            <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Skills I Have</h2>
+                    <button id="addSkill"
+                        class="text-sm px-3 py-1 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Add</button>
                 </div>
-                
-                <div class="flex gap-3">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
-                        Add Skill
-                    </button>
-                    <button type="button" id="cancelModal" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition cursor-pointer">
-                        Cancel
-                    </button>
+                <ul class="flex flex-wrap gap-2">
+                    @forelse($skillsHave as $skill)
+                        <li
+                            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-800 text-sm">
+                            <span>{{ $skill->skill_name }}</span>
+                            <button class="deleteModal text-red-500 hover:text-red-600" data-id="{{ $skill->id }}"
+                                title="Delete">&times;</button>
+                        </li>
+                    @empty
+                        <li class="text-sm text-gray-500">No skills yet</li>
+                    @endforelse
+                </ul>
+            </section>
+
+            <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Skills I Want</h2>
+                    <button id="addSkill2"
+                        class="text-sm px-3 py-1 rounded-md bg-emerald-600 text-white hover:bg-emerald-700">Add</button>
                 </div>
-            </form>
+                <ul class="flex flex-wrap gap-2">
+                    @forelse($skillsWant as $skill_w)
+                        <li
+                            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-sm">
+                            <span>{{ $skill_w->skill_name }}</span>
+                            <button class="deleteModal text-red-500 hover:text-red-600" data-id="{{ $skill_w->id }}"
+                                title="Delete">&times;</button>
+                        </li>
+                    @empty
+                        <li class="text-sm text-gray-500">No wishes yet</li>
+                    @endforelse
+                </ul>
+            </section>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Requests I Sent</h2>
+                <ul class="space-y-2 text-sm">
+                    @forelse($sentRequests as $req)
+                        <li class="flex items-center justify-between border border-gray-100 rounded-md p-3">
+                            <span>Request sent to {{ $req->receiver?->name }}</span>
+                            @php
+                                $badge = [
+                                    'pending' => 'bg-yellow-50 text-yellow-700',
+                                    'accepted' => 'bg-emerald-50 text-emerald-700',
+                                    'rejected' => 'bg-rose-50 text-rose-700',
+                                ][$req->status] ?? 'bg-gray-50 text-gray-700';
+                            @endphp
+                            <span class="px-2 py-0.5 rounded {{ $badge }} capitalize">
+                                {{ $req->status }}
+                            </span>
+                        </li>
+                    @empty
+                        <li class="text-sm text-gray-500">You have not sent any request</li>
+                    @endforelse
+                </ul>
+                <a href="{{ route('view_sent_request') }}" class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm">View
+                    all</a>
+            </section>
+
+            <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Requests I Received</h2>
+                <div class="space-y-3 mb-4">
+                    @if(session('success-update'))
+                        <div class="rounded-md bg-emerald-50 text-emerald-700 px-4 py-3">{{ session('success-update') }}</div>
+                    @endif
+                    @if(session('error-update'))
+                        <div class="rounded-md bg-rose-50 text-rose-700 px-4 py-3">{{ session('error-update') }}</div>
+                    @endif
+                    @if($errors->any())
+                        <div class="rounded-md bg-amber-50 text-amber-800 px-4 py-3">
+                            <ul class="list-disc list-inside text-sm">
+                                @foreach($errors->all() as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+                <ul class="space-y-2 text-sm">
+                    @forelse($recievedRequests as $req)
+                        @if ($req->status = "pending")
+                            <li class="flex items-center justify-between border border-gray-100 rounded-md p-3">
+                                <span>{{ $req->sender?->name }}</span>
+                                @if($req->status == 'pending')
+                                    <div class="flex space-x-3">
+                                        <form method="POST" action="{{ route('update_skill_request', $req->id) }}">
+                                            @csrf
+                                            <input type="hidden" value="accept" name="action">
+                                            <button type="submit"
+                                                class="text-emerald-600 cursor-pointer text-sm hover:text-emerald-700">Accept</button>
+                                        </form>
+                                        <form method="POST" action="{{ route('update_skill_request', $req->id) }}">
+                                            @csrf
+                                            <input type="hidden" value="reject" name="action">
+                                            <button type="submit"
+                                                class="text-rose-600 text-sm hover:text-rose-700 cursor-pointer">Reject</button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </li>
+                        @endif
+                    @empty
+                        <li class="text-sm text-gray-500">You have not recieved any request</li>
+                    @endforelse
+                </ul>
+                <a href="{{ route("view_recieved_request") }}"
+                    class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm">View all</a>
+            </section>
+        </div>
+
+        <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Matched Users</h2>
+            </div>
+            <div class="space-y-4">
+                @forelse(($matchedUsers ?? collect()) as $req)
+                    <div class="p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="space-y-1">
+                            <div class="text-sm text-gray-500">Partner</div>
+                            <div class="font-semibold text-gray-900">
+                                {{ $req->sender_id === auth()->id() ? ($req->receiver?->name ?? 'User') : ($req->sender?->name ?? 'User') }}
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                {{ $req->sender_id === auth()->id() ? ($req->receiver?->email ?? '') : ($req->sender?->email ?? '') }}
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                {{ $req->sender_id === auth()->id() ? ($req->receiver?->contact_info ?? '-') : ($req->sender?->contact_info ?? '-') }}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-sm">Accepted</span>
+                            <a class="text-indigo-600 text-sm hover:text-indigo-700"
+                                href="mailto:{{ $req->sender_id === auth()->id() ? ($req->receiver?->email ?? '') : ($req->sender?->email ?? '') }}">
+                                Email
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-gray-500">No accepted requests yet.</div>
+                @endforelse
+                <a href="{{ route("view_accepted") }}" class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm">View
+                    all</a>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Find New Matches</h2>
+            </div>
+
+            <div class="space-y-3 mb-4">
+                @if(session('success'))
+                    <div class="rounded-md bg-emerald-50 text-emerald-700 px-4 py-3">{{ session('success') }}</div>
+                @endif
+                @if(session('error'))
+                    <div class="rounded-md bg-rose-50 text-rose-700 px-4 py-3">{{ session('error') }}</div>
+                @endif
+                @if($errors->any())
+                    <div class="rounded-md bg-amber-50 text-amber-800 px-4 py-3">
+                        <ul class="list-disc list-inside text-sm">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </div>
+
+            <div class="space-y-4">
+                @if(isset($eligibleMatches) && $eligibleMatches->count() > 0)
+                    @foreach($eligibleMatches as $eligibleMatch)
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-900">{{ $eligibleMatch->name }}</h3>
+                                    <p class="text-sm text-gray-500">{{ $eligibleMatch->email }}</p>
+                                </div>
+                                <form action="/send-request/{{ $user->id }}/" method="post" class="flex-none">
+                                    @csrf
+                                    <input type="hidden" name="matched_user_id" value="{{ $eligibleMatch->id }}">
+                                    <button type="submit"
+                                        class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm hover:bg-indigo-700 cursor-pointer">
+                                        Send Request
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-4 mt-4">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">They have (you want)</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($eligibleMatch->skills->where('type', 'have') as $skill)
+                                            @if(in_array($skill->skill_name, $skillsWant->pluck('skill_name')->toArray()))
+                                                <span
+                                                    class="px-2 py-1 text-xs rounded-full bg-indigo-50 text-indigo-700">{{ $skill->skill_name }}</span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">They want (you have)</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($eligibleMatch->skills->where('type', 'want') as $skill)
+                                            @if(in_array($skill->skill_name, $skillsHave->pluck('skill_name')->toArray()))
+                                                <span
+                                                    class="px-2 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700">{{ $skill->skill_name }}</span>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="text-center py-10">
+                        <p class="text-gray-500">No matches yet. Add more skills to improve your matches.</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+
+        <div id="skillModal" class="fixed left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] z-50 hidden">
+            <div class="bg-white w-full max-w-md rounded-xl border border-gray-200 shadow-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-semibold text-gray-900">Add New Skill</h3>
+                    <button id="closeModal" class="text-gray-400 hover:text-gray-600">&times;</button>
+                </div>
+
+                <form action="/add-skill" method="POST" class="space-y-5">
+                    @csrf
+                    <div>
+                        <label for="skill_name" class="block text-sm font-medium text-gray-700">Skill Name</label>
+                        <input id="skill_name" name="skill_name" type="text" required
+                            class="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="e.g., Guitar, Python, Cooking">
+                    </div>
+                    <div>
+                        <span class="block text-sm font-medium text-gray-700 mb-2">Type</span>
+                        <div class="flex items-center gap-6 text-sm">
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="type" value="have" checked>
+                                <span>I have this</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="radio" name="type" value="want">
+                                <span>I want this</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">
+                            Add Skill
+                        </button>
+                        <button type="button" id="cancelModal"
+                            class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-md hover:bg-gray-200">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Skill Modal (centered, no backdrop) -->
+        <div id="deleteSkillModal" class="fixed left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] z-50 hidden">
+            <div class="bg-white w-full max-w-md rounded-xl border border-gray-200 shadow-2xl p-6">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Delete skill</h3>
+                <p class="text-sm text-gray-600 mb-6">This action cannot be undone.</p>
+
+                <form action="/delete-skill" method="POST" class="space-y-4">
+                    @csrf
+                    <input type="hidden" id="deleteSkillId" name="skill_id">
+                    <div class="flex items-center gap-3">
+                        <button type="submit" class="flex-1 bg-rose-600 text-white py-2 rounded-md hover:bg-rose-700">
+                            Delete
+                        </button>
+                        <button type="button" id="cancelDeleteModal"
+                            class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-md hover:bg-gray-200">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-        <div class="fixed left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] bg-opacity-50 flex items-center justify-center z-50 hidden" id="deleteSkillModal">
-        <div class="bg-red-500 text-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">   
-            <form action="/delete-skill" method="POST">
-                @csrf
-                <input type="hidden" id="deleteSkillId" name="skill_id">
-                <div class="flex gap-3">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
-                        Delete Skill
-                    </button>
-                    <button type="button" id="cancelDeleteModal" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition cursor-pointer">
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection
