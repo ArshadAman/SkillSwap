@@ -7,10 +7,6 @@
                 <h1 class="text-3xl font-bold text-gray-900">Welcome, {{ $user->name ?? '-' }}</h1>
                 <p class="text-sm text-gray-500 mt-1">Manage your skills and find good matches</p>
             </div>
-            <div class="hidden md:flex items-center gap-4 text-sm">
-                <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700">Have: {{ $skillsHave->count() }}</span>
-                <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700">Want: {{ $skillsWant->count() }}</span>
-            </div>
         </header>
 
         <div class="grid md:grid-cols-3 gap-6">
