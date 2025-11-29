@@ -21,12 +21,12 @@
                         @auth
                             <form method="GET" action="{{ route('logout') }}" class="inline cursor-pointer">
                                 @csrf
-                                <button type="submit" class="text-white rounded-full font-medium ml-4 cursor-pointer bg-red-400 py-2 px-4">Log out</button>
+                                <button type="submit" class="cursor-pointer bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">Log out</button>
                             </form>
                         @else
                             <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 font-medium">Log in</a>
                             @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">Sign up</a>
+                                <a href="{{ route('register') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition cursor-pointer">Sign up</a>
                             @endif
                         @endauth
                     @endif

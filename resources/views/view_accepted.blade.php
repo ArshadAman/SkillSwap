@@ -31,7 +31,20 @@
                                 {{ $req->sender_id === auth()->id() ? ($req->receiver?->contact_info ?? '-') : ($req->sender?->contact_info ?? '-') }}
                             </div>
                         </div>
-
+                            <div>
+                            <span>Have: </span>
+                            @foreach ($req->sender?->skills as $skill)
+                                @if ($skill->type == "have" && $user->skills->where('type', 'want')->pluck('skill_name')->contains($skill->skill_name))
+                                    <span>{{ $skill->skill_name }}</span> |
+                                @endif
+                            @endforeach
+                            <span>Want: </span>
+                            @foreach ($req->sender?->skills as $skill)
+                                @if ($skill->type == "want" && $user->skills->where('type', 'have')->pluck('skill_name')->contains($skill->skill_name))
+                                    <span>{{ $skill->skill_name }}</span> |
+                                @endif
+                            @endforeach
+                        </div>
                         <div class="flex items-center gap-3">
                             <span class="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-sm">Accepted</span>
                             <a class="text-indigo-600 text-sm hover:text-indigo-700"

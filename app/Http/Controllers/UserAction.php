@@ -17,7 +17,8 @@ class UserAction extends Controller
             $skillsWant = $user->skills()->where('type', 'want')->get();
 
             $alreadySentTo = SkillRequest::where('sender_id', $user->id)->pluck('receiver_id')->all();
-
+            $alreadyRecievedFrom = SkillRequest::where('receiver_id', $user->id)->pluck('sender_id')->all();
+            $alreadySentTo = array_merge($alreadySentTo, $alreadyRecievedFrom);
             $eligibleMatches = User::where('id', '!=', $user->id)
         ->whereNotIn('id', $alreadySentTo)
         ->whereHas('skills', function(Builder $query) use ($skillsWant) {
@@ -133,11 +134,12 @@ class UserAction extends Controller
 
     public function viewAccepted(Request $request){
         $user = $request->user();
-        $acceptedRequests = SkillRequest::with((['sender','receiver']))->where('status', 'accepted')->where(function($q) use ($user){
+        $acceptedRequests = SkillRequest::with((['sender','receiver']))->where('status', 'accepted')->where(function($q)
+        use ($user){
             $q->where('receiver_id', $user->id);
             $q->orWhere('sender_id', $user->id);
         })->get();
-        return view('view_accepted', compact('acceptedRequests'));
+        return view('view_accepted', compact('acceptedRequests', 'user'));
     }
 
 }
